@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: lint-task
+spec:
+  workspaces:
+    - name: shared-workspace
+  steps:
+    - name: run-linter
+      image: python:3.9
+      script: |
+        #!/bin/bash
+        pip install flake8
+        cd $(workspaces.shared-workspace.path)
+        flake8 .

@@ -5,40 +5,42 @@ metadata:
 spec:
   params:
     - name: IMAGE
+      type: string
     - name: DEPLOYMENT
+      type: string
   workspaces:
     - name: shared-workspace
   tasks:
     - name: lint
       taskRef:
-        name: lint
+        name: lint-task
       workspaces:
-        - name: source
+        - name: shared-workspace
           workspace: shared-workspace
 
     - name: test
       runAfter: [lint]
       taskRef:
-        name: test
+        name: test-task
       workspaces:
-        - name: source
+        - name: shared-workspace
           workspace: shared-workspace
 
-    - name: build-image
+    - name: build
       runAfter: [test]
       taskRef:
-        name: build-image
+        name: build-task
       params:
         - name: IMAGE
           value: $(params.IMAGE)
       workspaces:
-        - name: source
+        - name: shared-workspace
           workspace: shared-workspace
 
     - name: deploy
-      runAfter: [build-image]
+      runAfter: [build]
       taskRef:
-        name: deploy-openshift
+        name: deploy-task
       params:
         - name: IMAGE
           value: $(params.IMAGE)

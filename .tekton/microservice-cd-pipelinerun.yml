@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: microservice-cd-pipelinerun
+spec:
+  pipelineRef:
+    name: microservice-cd-pipeline
+  params:
+    - name: IMAGE
+      value: quay.io/YOUR_USERNAME/microservice:latest
+    - name: DEPLOYMENT
+      value: microservice
+  workspaces:
+    - name: shared-workspace
+      emptyDir: {}
