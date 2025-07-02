@@ -2,14 +2,23 @@ apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   name: microservice-cd-pipelinerun
+  namespace: sn-labs-yadavnitesh2
 spec:
   pipelineRef:
     name: microservice-cd-pipeline
   params:
     - name: IMAGE
-      value: quay.io/YOUR_USERNAME/microservice:latest
+      value: us.icr.io/sn-labs-yadavnitesh2/ci-cd-final-project:latest
     - name: DEPLOYMENT
-      value: microservice
+      value: ci-cd-final-deployment
   workspaces:
     - name: shared-workspace
-      emptyDir: {}
+      volumeClaimTemplate:
+        metadata:
+          name: shared-pvc
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
