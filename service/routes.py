@@ -22,7 +22,7 @@ def health():
 ############################################################
 @app.route("/")
 def index():
-    """Returns information abut the service"""
+    """Returns information about the service"""
     app.logger.info("Request for Base URL")
     return jsonify(
         status=status.HTTP_200_OK,
@@ -54,7 +54,10 @@ def create_counters(name):
     app.logger.info("Request to Create counter: %s...", name)
 
     if name in COUNTER:
-        return abort(status.HTTP_409_CONFLICT, f"Counter {name} already exists")
+        return abort(
+            status.HTTP_409_CONFLICT,
+            description=f"Counter {name} already exists"
+        )
 
     COUNTER[name] = 0
 
@@ -75,7 +78,10 @@ def read_counters(name):
     app.logger.info("Request to Read counter: %s...", name)
 
     if name not in COUNTER:
-        return abort(status.HTTP_404_NOT_FOUND, f"Counter {name} does not exist")
+        return abort(
+            status.HTTP_404_NOT_FOUND,
+            description=f"Counter {name} does not exist"
+        )
 
     counter = COUNTER[name]
     return jsonify(name=name, counter=counter)
@@ -90,7 +96,10 @@ def update_counters(name):
     app.logger.info("Request to Update counter: %s...", name)
 
     if name not in COUNTER:
-        return abort(status.HTTP_404_NOT_FOUND, f"Counter {name} does not exist")
+        return abort(
+            status.HTTP_404_NOT_FOUND,
+            description=f"Counter {name} does not exist"
+        )
 
     COUNTER[name] += 1
 
@@ -104,7 +113,7 @@ def update_counters(name):
 @app.route("/counters/<name>", methods=["DELETE"])
 def delete_counters(name):
     """Deletes a counter"""
-    app.logger.info("Request to Delete counter: %s...", name)
+    app.logger.info(f"Delete counter request: {name}...")
 
     if name in COUNTER:
         COUNTER.pop(name)
